@@ -1,0 +1,167 @@
+/* ==========================================================================
+   ATELIER PROMPT ENGINE — LIVE COMPILER DRAWER & OUTPUT STYLES
+   ========================================================================== */
+
+.compiler-drawer {
+  width: 440px;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 45;
+  transition: transform 0.25s ease;
+}
+
+.compiler-drawer.collapsed {
+  transform: translateX(100%);
+}
+
+.compiler-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface);
+}
+
+.compiler-title {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compiler-controls {
+  padding: 12px 16px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.syntax-bar {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.syntax-chip {
+  padding: 4px 9px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.syntax-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.syntax-chip.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.metric-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.metric-bar span strong {
+  color: var(--text-primary);
+}
+
+/* Prompt Output Box */
+.compiler-body {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 8px;
+}
+
+.output-textarea {
+  flex: 1;
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.output-textarea:focus {
+  border-color: var(--accent);
+}
+
+.compiler-actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-copy {
+  flex: 1;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  transition: background-color 0.15s ease;
+}
+
+.btn-copy:hover {
+  background: var(--accent-hover);
+}
+
+/* Responsive Drawer for mobile / small screens */
+@media (max-width: 1100px) {
+  .compiler-drawer {
+    width: 360px;
+  }
+}
+
+@media (max-width: 900px) {
+  .compiler-drawer {
+    position: fixed;
+    top: 52px;
+    bottom: calc(56px + var(--safe-bottom));
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+  }
+}

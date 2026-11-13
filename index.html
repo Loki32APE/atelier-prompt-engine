@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Atelier Prompt Engine — Visual & Textual Prompt Architecture</title>
+  <meta name="description" content="Structured prompt engineering workspace for visual reference extraction, eight-module editorial prompt compilation, and Nano Banana 2.1 raw prompt architecture." />
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/studio.css" />
+  <link rel="stylesheet" href="css/lab.css" />
+  <link rel="stylesheet" href="css/compiler.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SVG VECTOR SPRITE ICONS
+       ========================================================================== -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="brand-wireframe-a" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="30" stroke="var(--border-strong)" stroke-width="1.2" opacity="0.35" stroke-dasharray="2 3" />
+      <polygon points="32 8 10 56 54 56" stroke="var(--logo-primary)" stroke-width="2.2" stroke-linejoin="round" />
+      <polygon points="32 18 20 46 44 46" stroke="var(--logo-secondary)" stroke-width="1.4" stroke-linejoin="round" />
+      <circle cx="32" cy="8" r="2.5" fill="var(--logo-primary)" />
+      <circle cx="10" cy="56" r="2.5" fill="var(--logo-primary)" />
+      <circle cx="54" cy="56" r="2.5" fill="var(--logo-primary)" />
+      <line x1="16" y1="38" x2="48" y2="38" stroke="var(--logo-primary)" stroke-width="1.8" />
+    </symbol>
+
+    <!-- Rail Icons -->
+    <symbol id="ico-nav-studio" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="9" cy="10" r="2" /><path d="M21 16l-5-5-6 6" />
+    </symbol>
+    <symbol id="ico-nav-lab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" /><circle cx="9" cy="7" r="2" fill="var(--bg-surface)" /><circle cx="15" cy="12" r="2" fill="var(--bg-surface)" /><circle cx="10" cy="17" r="2" fill="var(--bg-surface)" />
+    </symbol>
+    <symbol id="ico-nav-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </symbol>
+    <symbol id="ico-nav-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </symbol>
+
+    <!-- Visual Lab Module Icons -->
+    <symbol id="ico-mod-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="12" cy="12" r="3.5" /><line x1="12" y1="8.5" x2="13.8" y2="10.8" /><line x1="15.5" y1="12" x2="13.2" y2="13.8" /><line x1="12" y1="15.5" x2="10.2" y2="13.2" /><line x1="8.5" y1="12" x2="10.8" y2="10.2" />
+    </symbol>
+    <symbol id="ico-mod-theme" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="4" width="18" height="16" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="9" x2="9" y2="20" /><polygon points="15 12 16 14 18 14.3 16.5 15.7 16.9 17.7 15 16.7 13.1 17.7 13.5 15.7 12 14.3 14 14 15 12" />
+    </symbol>
+    <symbol id="ico-mod-artstyle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 19l7-7 3 3-7 7-3-3z" /><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><line x1="2" y1="2" x2="9.5" y2="9.5" /><circle cx="11" cy="11" r="1.2" />
+    </symbol>
+    <symbol id="ico-mod-location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M3 21h18M5 21V7l7-4 7 4v14" /><rect x="9" y="13" width="6" height="8" /><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2" /><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2" />
+    </symbol>
+    <symbol id="ico-mod-attire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M20.38 3.46L16 2 12 5.5 8 2l-4.38 1.46a2 2 0 0 0-1.34 1.89V10a2 2 0 0 0 1.25 1.86L6 13v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-7l2.09-1.14A2 2 0 0 0 21.34 10V5.35a2 2 0 0 0-.96-1.89z" />
+    </symbol>
+    <symbol id="ico-mod-appearance" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" /><circle cx="12" cy="9" r="2.5" />
+    </symbol>
+    <symbol id="ico-mod-makeup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9" /><path d="M18 16l4-4-7.5-7.5L11 8" />
+    </symbol>
+    <symbol id="ico-mod-hair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 18c2-4 4-7 8-7s6 3 8 7" /><path d="M12 4a5 5 0 0 0-5 5c0 3 2 5 5 5s5-2 5-5a5 5 0 0 0-5-5z" />
+    </symbol>
+    <symbol id="ico-mod-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="4" r="2" /><path d="m15 22-3-7-3 7" /><path d="M9 11l3 4 3-4" /><line x1="5" y1="12" x2="19" y2="12" />
+    </symbol>
+    <symbol id="ico-mod-character" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+    </symbol>
+  </svg>
+
+  <!-- ==========================================================================
+       APPLICATION SHELL
+       ========================================================================== -->
+  <div class="app-shell">
+
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <a class="brand-badge" onclick="switchWorkspace('studio')">
+          <svg><use href="#brand-wireframe-a" /></svg>
+          <span class="brand-title">Atelier Prompt Engine</span>
+          <span class="brand-ver">v2.1 RAW</span>
+        </a>
+        <div class="ws-crumbs">
+          <strong id="wsCrumbTitle" style="color:var(--text-primary); font-family:var(--font-mono);">VISION STUDIO</strong>
+          <span>/</span>
+          <span id="wsCrumbSub" style="color:var(--text-secondary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Reference extraction &amp; Nano Banana 2.1 raw architecture</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- OpenRouter Status Pill -->
+        <button type="button" class="badge-pill" id="openrouterStatusBadge" onclick="openSettingsModal()" title="Configure OpenRouter NVIDIA VL API">
+          <span class="dot"></span> NVIDIA NeMo VL
+        </button>
+
+        <!-- Theme Toggle -->
+        <button type="button" class="icon-btn" onclick="toggleTheme()" title="Toggle Dark/Light Theme">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+          </svg>
+        </button>
+
+        <!-- Settings Button -->
+        <button type="button" class="icon-btn" onclick="openSettingsModal()" title="OpenRouter &amp; Model Settings">
+          <svg width="17" height="17"><use href="#ico-nav-settings" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Workspace Wrapper -->
+    <div class="workspace-wrapper">
+
+      <!-- Left Rail Navigation -->
+      <nav class="workspace-rail">
+        <button type="button" class="rail-btn active" onclick="switchWorkspace('studio', this)" title="Vision Studio &amp; Raw Architecture">
+          <svg><use href="#ico-nav-studio" /></svg>
+          <span class="rail-label">Studio</span>
+        </button>
+
+        <button type="button" class="rail-btn" onclick="switchWorkspace('lab', this)" title="8-Module Visual Lab">
+          <svg><use href="#ico-nav-lab" /></svg>
+          <span class="rail-label">Lab</span>
+        </button>
+
+        <button type="button" class="rail-btn" onclick="switchWorkspace('library', this)" title="Editorial Prompt Library">
+          <svg><use href="#ico-nav-library" /></svg>
+          <span class="rail-label">Library</span>
+        </button>
+
+        <div class="rail-divider"></div>
+
+        <button type="button" class="rail-btn" onclick="openSettingsModal()" title="Settings &amp; OpenRouter API">
+          <svg><use href="#ico-nav-settings" /></svg>
+          <span class="rail-label">Config</span>
+        </button>
+      </nav>
+
+      <!-- Main Viewport Area -->
+      <div class="workspace-viewport">
+
+        <!-- ==================================================================
+             PANEL 1: VISION STUDIO (REFERENCE EXTRACTION & RAW ARCHITECTURE)
+             ================================================================== -->
+        <div class="workspace-panel active" id="panel-studio">
+
+          <!-- OpenRouter Quick Connect Banner -->
+          <div class="openrouter-banner">
+            <div class="openrouter-info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" /><path d="m10 15 5-3-5-3v6z" />
+              </svg>
+              <div class="openrouter-text">
+                <h4>OpenRouter Vision Integration</h4>
+                <p>Active Model: <span id="activeModelName" style="color:var(--accent); font-family:var(--font-mono); font-weight:600;">NVIDIA Nemotron 70B / Free Multimodal</span></p>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn-secondary" onclick="openSettingsModal()">
+                Configure Key &amp; Model
+              </button>
+            </div>
+          </div>
+
+          <!-- Reference Dropzones Grid -->
+          <div class="studio-grid">
+            <!-- Look Reference Card -->
+            <div class="studio-card">
+              <div class="card-head">
+                <span class="card-title">
+                  <svg><use href="#ico-nav-studio" /></svg>
+                  1. Look Photo Reference
+                </span>
+                <span class="badge-tag">Pose &amp; Lighting</span>
+              </div>
+              <p style="font-size:0.75rem; color:var(--text-secondary);">
+                Extracts framing, visible range, pose &amp; gaze, and camera lighting into the master prompt.
+              </p>
+              <div class="dropzone" id="dropzoneLook">
+                <input type="file" id="fileInputLook" accept="image/*" style="display:none;" />
+                <img id="imgPreviewLook" class="dropzone-preview" alt="Look Preview" />
+                <button type="button" class="dropzone-overlay-clear" onclick="clearDropzone('look', event)">Clear</button>
+                <div class="dropzone-content">
+                  <svg width="28" height="28" style="color:var(--text-muted); margin-bottom:8px;"><use href="#ico-nav-studio" /></svg>
+                  <p style="font-weight:600; font-size:0.82rem;">Drop Look Image Here</p>
+                  <p style="font-size:0.72rem; color:var(--text-muted);">or click to browse from device</p>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="button" class="btn-primary" id="btnExtract_look" onclick="runVisionExtraction('look')">
+                  Extract with Vision
+                </button>
+              </div>
+              <textarea id="lookAnalysisOutput" class="raw-textarea" style="min-height:60px; font-size:0.75rem;" placeholder="Vision analysis output will appear here..." oninput="appState.lookDescription=this.value; compileAndRender();"></textarea>
+            </div>
+
+            <!-- Outfit Reference Card -->
+            <div class="studio-card">
+              <div class="card-head">
+                <span class="card-title">
+                  <svg><use href="#ico-mod-attire" /></svg>
+                  2. Outfit Photo Reference
+                </span>
+                <span class="badge-tag">Garment &amp; Drape</span>
+              </div>
+              <p style="font-size:0.75rem; color:var(--text-secondary);">
+                Extracts weave, embroidery, zari density, and natural fabric drapery parameters.
+              </p>
+              <div class="dropzone" id="dropzoneOutfit">
+                <input type="file" id="fileInputOutfit" accept="image/*" style="display:none;" />
+                <img id="imgPreviewOutfit" class="dropzone-preview" alt="Outfit Preview" />
+                <button type="button" class="dropzone-overlay-clear" onclick="clearDropzone('outfit', event)">Clear</button>
+                <div class="dropzone-content">
+                  <svg width="28" height="28" style="color:var(--text-muted); margin-bottom:8px;"><use href="#ico-mod-attire" /></svg>
+                  <p style="font-weight:600; font-size:0.82rem;">Drop Outfit Image Here</p>
+                  <p style="font-size:0.72rem; color:var(--text-muted);">or click to browse from device</p>
+                </div>
+              </div>
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="button" class="btn-primary" id="btnExtract_outfit" onclick="runVisionExtraction('outfit')">
+                  Extract with Vision
+                </button>
+              </div>
+              <textarea id="outfitAnalysisOutput" class="raw-textarea" style="min-height:60px; font-size:0.75rem;" placeholder="Outfit analysis output will appear here..." oninput="appState.outfitDescription=this.value; compileAndRender();"></textarea>
+            </div>
+          </div>
+
+          <!-- Direct Directive Inputs -->
+          <div class="studio-card" style="margin-bottom:24px;">
+            <div class="card-head">
+              <span class="card-title">
+                <svg><use href="#ico-mod-character" /></svg>
+                Subject Directives (User-Written Overrides)
+              </span>
+              <span class="badge-tag">Rule 1 &amp; Rule 2</span>
+            </div>
+            <div class="slot-grid">
+              <div class="slot-item">
+                <label class="slot-label" for="inputSubjectText">SUBJECT PHYSIQUE:</label>
+                <input type="text" id="inputSubjectText" class="raw-input-text" placeholder="e.g. natural curves, relaxed shoulders, visible collarbone..." oninput="appState.subjectText=this.value; compileAndRender();" />
+              </div>
+              <div class="slot-item">
+                <label class="slot-label" for="inputHairstyleText">HAIRSTYLE TEXT (Rule 2 Exception):</label>
+                <input type="text" id="inputHairstyleText" class="raw-input-text" placeholder="e.g. Center-parted low chignon with jasmine gajra..." oninput="appState.hairstyleText=this.value; compileAndRender();" />
+              </div>
+              <div class="slot-item">
+                <label class="slot-label" for="inputPoseText">POSE TEXT (Screen-Left / Screen-Right):</label>
+                <input type="text" id="inputPoseText" class="raw-input-text" placeholder="e.g. Torso turned toward screen-left, head tilted slightly..." oninput="appState.poseText=this.value; compileAndRender();" />
+              </div>
+            </div>
+          </div>
+
+          <!-- RAW PROMPT ARCHITECTURE (NANO BANANA 2.1) -->
+          <div class="raw-arch-section">
+            <div class="raw-arch-header">
+              <div class="raw-header-left">
+                <svg width="20" height="20" style="color:var(--accent);"><use href="#ico-mod-artstyle" /></svg>
+                <span style="font-family:var(--font-mono); font-size:0.88rem; font-weight:700;">RAW PROMPT ARCHITECTURE (NANO BANANA 2.1)</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <!-- Mode Toggle -->
+                <div class="seg-control" id="rawModeControls">
+                  <button type="button" class="seg-btn active" onclick="setRawMode('BOTH', this)">BOTH</button>
+                  <button type="button" class="seg-btn" onclick="setRawMode('LOOK_ONLY', this)">LOOK ONLY</button>
+                  <button type="button" class="seg-btn" onclick="setRawMode('OUTFIT_ONLY', this)">OUTFIT ONLY</button>
+                </div>
+
+                <!-- Detail Level Toggle -->
+                <div class="seg-control" id="detailLevelControls">
+                  <button type="button" class="seg-btn" onclick="setDetailLevel('fast', this)">Fast (~800ch)</button>
+                  <button type="button" class="seg-btn active" onclick="setDetailLevel('balanced', this)">Balanced (~1.4k)</button>
+                  <button type="button" class="seg-btn" onclick="setDetailLevel('detailed', this)">Detailed (~2k)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Directive 1: Raw Outfit Transfer Line -->
+            <div class="raw-control-group">
+              <div class="raw-label">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="chkRawOutfit" checked onchange="toggleRawOutfitLine(this)" />
+                  <span>1. Reference-Led Outfit Transfer Directive</span>
+                </label>
+                <span class="badge-tag" id="badgeOutfitActive">ACTIVE</span>
+              </div>
+              <input type="text" id="txtRawOutfitLine" class="raw-input-text" value="OUTFIT: take the outfit from reference image." oninput="appState.rawOutfitLine=this.value; compileAndRender();" />
+            </div>
+
+            <!-- Directive 2: Natural Fabric Physics Simulation Block -->
+            <div class="raw-control-group">
+              <div class="raw-label">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="chkRawFabric" checked onchange="toggleRawFabricBlock(this)" />
+                  <span>2. Natural Fabric Gravity &amp; Fuller Body Drape Simulation</span>
+                </label>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Presets:</span>
+              </div>
+              <div id="fabricControlsWrap">
+                <div class="preset-pills" id="fabricPresetPills"></div>
+                <textarea id="rawFabricTextarea" class="raw-textarea" oninput="handleFabricTextChange(this.value)">Fabric follows a soft, fuller body with natural weight. The cloth rests over the bust and falls down with gentle gravity, skimming the waist without pulling tight across the midsection. Over the wide hips and thick thighs the fabric flows with heavy, rounded folds, never stretched or clinging. Tension appears only where the body curves outward at the bust and hips, where the cloth lightly stretches, and it falls loose and soft at the waist and lower body. Shadows sit softly in the undercurves of the bust, along the side of the waist, and in the creases beneath the hips. Hems hang heavy with natural gravity, and fabric touching the floor or furniture compresses slightly with a soft contact shadow.</textarea>
+              </div>
+            </div>
+
+            <!-- Directive 3: Anti-Shrinkwrap Negative Additions -->
+            <div class="raw-control-group">
+              <div class="raw-label">
+                <span>3. Anti-Shrinkwrap / Natural Anatomy Negative Additions</span>
+                <button type="button" class="btn-secondary" style="padding:2px 8px; font-size:0.72rem;" onclick="toggleAllNegativeChips()">
+                  Toggle All
+                </button>
+              </div>
+              <div class="chips-container" id="negativeChipsContainer"></div>
+            </div>
+
+            <!-- Directive 4: Direct Raw Injection Scratchpad -->
+            <div class="raw-control-group" style="margin-bottom:0;">
+              <div class="raw-label">
+                <span>4. Direct Raw Prompt Injection (Overrides All)</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Optional Scratchpad</span>
+              </div>
+              <textarea id="txtDirectRawInput" class="raw-textarea" style="min-height:75px;" placeholder="Paste an existing complete Nano Banana 2.1 raw prompt here to inspect or export..." oninput="handleDirectRawInput(this.value)"></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==================================================================
+             PANEL 2: VISUAL LAB (8 AUTHENTIC EDITORIAL MODULES)
+             ================================================================== -->
+        <div class="workspace-panel" id="panel-lab">
+          <div class="lab-container">
+            <!-- Lab Top Controls Bar -->
+            <div class="lab-top-bar">
+              <div class="lab-stats">
+                <div class="lab-stat-item">
+                  <span>Total Selected:</span>
+                  <strong id="labTotalSelectedCount">0</strong>
+                </div>
+                <div class="lab-stat-item">
+                  <span>Architecture:</span>
+                  <strong>8 Granular Modules</strong>
+                </div>
+              </div>
+              <div class="lab-actions-group">
+                <button type="button" class="btn-secondary" onclick="expandAllLab()">Expand All</button>
+                <button type="button" class="btn-secondary" onclick="collapseAllLab()">Collapse All</button>
+                <button type="button" class="btn-secondary" onclick="resetAllLab()">Reset</button>
+              </div>
+            </div>
+
+            <!-- Wardrobe Conflict Alert -->
+            <div class="conflict-banner" id="wardrobeConflictBanner">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <span id="conflictDesc">Conflict detected in wardrobe selections.</span>
+              </div>
+              <button type="button" class="btn-fix" onclick="autoResolveConflict()">Auto-Resolve</button>
+            </div>
+
+            <!-- Dynamic Accordion List -->
+            <div id="labAccordionContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             PANEL 3: PROMPT LIBRARY
+             ================================================================== -->
+        <div class="workspace-panel" id="panel-library">
+          <div style="max-width:960px; margin:0 auto;">
+            <h2 style="font-family:var(--font-display); font-size:1.2rem; margin-bottom:6px;">Curated Editorial Profiles</h2>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:20px;">
+              Pre-engineered visual styles matching authentic Indian couture, minimalist luxury, and editorial studio photography.
+            </p>
+            <div class="studio-grid">
+              <div class="studio-card">
+                <h4 style="font-weight:700;">Royal Rajputana Heritage</h4>
+                <p style="font-size:0.78rem; color:var(--text-secondary);">Amber Fort courtyard setting, raw silk embroidered lehenga, antique polki maang tikka, chiaroscuro lighting.</p>
+                <button type="button" class="btn-secondary" onclick="loadLibraryPreset('rajputana')">Load Preset into Lab</button>
+              </div>
+              <div class="studio-card">
+                <h4 style="font-weight:700;">Silk Kanjeevaram Bridal</h4>
+                <p style="font-size:0.78rem; color:var(--text-secondary);">Emerald Banarasi saree, temple gold choker, jasmine gajra chignon, warm golden-hour lighting.</p>
+                <button type="button" class="btn-secondary" onclick="loadLibraryPreset('kanjeevaram')">Load Preset into Lab</button>
+              </div>
+              <div class="studio-card">
+                <h4 style="font-weight:700;">Minimalist Milanese Studio</h4>
+                <p style="font-size:0.78rem; color:var(--text-secondary);">Double-breasted wool blazer, wide-leg trousers, soft north-window daylight, quiet luxury aesthetic.</p>
+                <button type="button" class="btn-secondary" onclick="loadLibraryPreset('milanese')">Load Preset into Lab</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==================================================================
+           RIGHT DRAWER: LIVE COMPILER & OUTPUT ENGINE
+           ================================================================== -->
+      <aside class="compiler-drawer" id="compilerDrawer">
+        <div class="compiler-header">
+          <div class="compiler-title">
+            <svg width="17" height="17" style="color:var(--accent);"><use href="#ico-mod-artstyle" /></svg>
+            <span>Live Prompt Compiler</span>
+          </div>
+          <span class="badge-tag">Dynamic Live</span>
+        </div>
+
+        <div class="compiler-controls">
+          <!-- Syntax Selector Bar -->
+          <div class="syntax-bar">
+            <button type="button" class="syntax-chip active" onclick="setTargetSyntax('nb_raw', this)">NB 2.1 (RAW Mode)</button>
+            <button type="button" class="syntax-chip" onclick="setTargetSyntax('nb_master', this)">NB 2.1 (Master Labeled)</button>
+            <button type="button" class="syntax-chip" onclick="setTargetSyntax('prose', this)">Natural Prose</button>
+            <button type="button" class="syntax-chip" onclick="setTargetSyntax('midjourney', this)">Midjourney v6</button>
+            <button type="button" class="syntax-chip" onclick="setTargetSyntax('flux', this)">Flux.1</button>
+            <button type="button" class="syntax-chip" onclick="setTargetSyntax('json', this)">JSON</button>
+          </div>
+
+          <!-- Live Metrics Bar -->
+          <div class="metric-bar">
+            <span>Chars: <strong id="metricCharCount">0</strong></span>
+            <span>Est. Tokens: <strong id="metricTokenCount">0</strong></span>
+            <span>Budget: <strong id="metricBudgetTarget">1400</strong></span>
+          </div>
+        </div>
+
+        <div class="compiler-body">
+          <textarea id="masterPromptOutput" class="output-textarea" placeholder="Compiled master prompt will appear here in real-time..."></textarea>
+        </div>
+
+        <div class="compiler-actions">
+          <button type="button" class="btn-copy" onclick="copyMasterPrompt()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            Copy Prompt
+          </button>
+          <button type="button" class="btn-secondary" onclick="downloadPromptTxt()" title="Download as .txt">
+            Download
+          </button>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Toast Shelf Container -->
+    <div class="toast-shelf" id="toastShelf"></div>
+
+    <!-- ==================================================================
+         MODAL: OPENROUTER API & MODEL SETTINGS
+         ================================================================== -->
+    <div class="modal-backdrop" id="settingsModal">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <h3>OpenRouter &amp; NVIDIA VL Configuration</h3>
+          <button type="button" class="icon-btn" onclick="closeSettingsModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:14px;">
+            Enter your OpenRouter API key to enable live vision extraction on uploaded reference photos. Your key is stored safely in your browser's <code style="font-family:var(--font-mono); color:var(--accent);">localStorage</code> and is never sent to any intermediary server.
+          </p>
+
+          <div class="slot-item" style="margin-bottom:16px;">
+            <label class="slot-label" for="openrouterApiKeyInput">
+              <span>OpenRouter API Key:</span>
+              <a href="https://openrouter.ai/keys" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none; font-size:0.75rem;">Get Free Key ↗</a>
+            </label>
+            <input type="password" id="openrouterApiKeyInput" class="raw-input-text" placeholder="sk-or-v1-..." />
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+              <span id="openrouterKeyTestStatus" style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted);">Not tested</span>
+              <button type="button" class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="testOpenRouterKey()">
+                Test Connection
+              </button>
+            </div>
+          </div>
+
+          <div class="slot-item" style="margin-bottom:16px;">
+            <label class="slot-label" for="openrouterModelSelect">Vision &amp; Synthesis Model:</label>
+            <select id="openrouterModelSelect" class="slot-select">
+              <option value="nvidia/llama-3.1-nemotron-70b-instruct">NVIDIA Nemotron 70B (Instruct)</option>
+              <option value="meta-llama/llama-3.2-11b-vision-instruct:free">Llama 3.2 11B Vision (Free multimodal)</option>
+              <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free Vision)</option>
+              <option value="qwen/qwen-2-vl-72b-instruct:free">Qwen 2 VL 72B (Free Vision)</option>
+            </select>
+          </div>
+
+          <div class="slot-item">
+            <label class="slot-label" for="openrouterCustomModelInput">Custom Model Slug (Optional):</label>
+            <input type="text" id="openrouterCustomModelInput" class="raw-input-text" placeholder="e.g. nvidia/nemotron-4-340b-instruct" />
+            <span style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">Paste any model ID from the OpenRouter model catalog.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+          <button type="button" class="btn-primary" onclick="saveOpenRouterSettings()">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modular Scripts -->
+  <script src="js/schema.js"></script>
+  <script src="js/raw_prompts.js"></script>
+  <script src="js/openrouter.js"></script>
+  <script src="js/compiler.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

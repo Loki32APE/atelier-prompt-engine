@@ -400,7 +400,44 @@ def status():
         "envKeyConfigured": bool(os.environ.get("OPENROUTER_API_KEY"))
     })
 
-# 1. Vision Studio Job Starter
+# 1. Direct Vision Extraction (Look / Outfit reference analysis)
+@app.route("/api/vision", methods=["POST"])
+def vision_extract():
+    data = request.get_json(silent=True) or {}
+    api_key = request.headers.get("Authorization", "").replace("Bearer ", "").strip() or OPENROUTER_API_KEY
+
+    if not api_key:
+        return jsonify({"error": "OPENROUTER_API_KEY environment variable is not configured on the server."}), 401
+
+    image_b64 = data.get("image")
+    ref_type = data.get("type", "look")
+    model = data.get("model") or "meta-llama/llama-3.2-11b-vision-instruct:free"
+
+    if not image_b64:
+        return jsonify({"error": "Missing image payload"}), 400
+
+    system_prompt = (
+        "Analyze this LOOK image. Extract: FRAMING, POSE AND ACTION (use screen-left and screen-right), "
+        "AND GAZE, LIGHTING AND CAMERA, BACKGROUND AND ENVIRONMENT, MAKEUP. Keep it short and factual."
+        if ref_type == "look" else
+        "Analyze this OUTFIT image. Extract: GARMENTS, FABRIC WEAVE & WEIGHT, SILHOUETTE, DRAPING, "
+        "JEWELLERY AND ACCESSORIES. Keep it concise."
+    )
+
+    try:
+        content = call_openrouter([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": [
+                {"type": "text", "text": "Extract features from this fashion reference photo:"},
+                {"type": "image_url", "image_url": {"url": image_b64}}
+            ]}
+        ], model=model, max_tokens=800, api_key=api_key)
+        return jsonify({"success": True, "model": model, "content": content})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# 2. Vision Studio Job Starter
 @app.route("/generate", methods=["POST"])
 def generate_studio():
     data = request.get_json(silent=True) or request.form.to_dict()

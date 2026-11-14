@@ -1431,7 +1431,7 @@
                   <span class="pill-badge pill-accent" style="font-weight:700;">AI Prompt Engine</span>
                   <span style="font-size:0.75rem; color:var(--text-secondary);" id="studioCoverageScore">Vision &amp; Synthesis Pipeline</span>
                 </div>
-                <span class="mono-label" style="font-size:0.7rem; color:var(--accent);" id="activeModelLabelStudio" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter LLM (Change)</span>
+                <span class="mono-label" id="activeModelLabelStudio" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter LLM (Change)</span>
               </div>
 
               <button type="button" class="btn btn-primary" id="btnGenerateStudioAI" onclick="triggerStudioAIGeneration()" style="width:100%; padding:13px 20px; font-size:0.95rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 16px rgba(224, 79, 51, 0.28);">
@@ -1495,7 +1495,7 @@
                   <span class="pill-badge pill-accent">Text-Only AI Composer</span>
                   <span style="font-size:0.75rem; color:var(--text-secondary);">Composes all selected modules with protected instructions</span>
                 </div>
-                <span class="mono-label" style="font-size:0.7rem; color:var(--accent);" id="activeModelLabelLab" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter (Change)</span>
+                <span class="mono-label" id="activeModelLabelLab" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter (Change)</span>
               </div>
 
               <button type="button" class="btn btn-primary" id="btnGenerateLabAI" onclick="triggerLabAIGeneration()" style="width:100%; padding:13px 20px; font-size:0.95rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:10px;">
@@ -1654,10 +1654,10 @@
 
             <!-- Prompt Completeness Meter (4 Pillars) -->
             <div class="meter-grid">
-              <div class="meter-cell ready" id="meterSubject">Subject</div>
-              <div class="meter-cell ready" id="meterOutfit">Outfit</div>
-              <div class="meter-cell ready" id="meterLighting">Lighting</div>
-              <div class="meter-cell ready" id="meterCamera">Camera</div>
+              <div class="meter-cell" id="meterSubject">Subject</div>
+              <div class="meter-cell" id="meterOutfit">Outfit</div>
+              <div class="meter-cell" id="meterLighting">Lighting</div>
+              <div class="meter-cell" id="meterCamera">Camera</div>
             </div>
 
             <!-- Collapsible Negative Constraints Drawer -->
@@ -1727,19 +1727,26 @@
         <div class="card-inset" style="padding:10px 12px; display:flex; align-items:center; gap:10px; border-color:var(--accent-border);">
           <span style="width:8px; height:8px; border-radius:50%; background-color:var(--status-valid); flex-shrink:0;"></span>
           <div style="font-size:0.77rem; color:var(--text-secondary); line-height:1.4;">
-            <strong style="color:var(--text-primary); display:block; margin-bottom:1px;">Server-Side Environment Security</strong>
-            API key is managed on Render via <code style="color:var(--accent); font-family:var(--font-mono);">OPENROUTER_API_KEY</code>. No keys exposed in frontend!
+            <strong style="color:var(--text-primary); display:block; margin-bottom:1px;">Local-First · Zero Cloud Uploads</strong>
+            Your key stays in this browser's localStorage and is sent only to OpenRouter's official API.
           </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="openrouterApiKeyInput">OPENROUTER API KEY</label>
+          <input type="password" id="openrouterApiKeyInput" class="field-input" placeholder="sk-or-v1-..." autocomplete="off" />
+          <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Get a free key at openrouter.ai/keys. Required for all AI extraction &amp; generation.</span>
         </div>
 
         <div class="field-group">
           <label class="field-label" for="openrouterModelSelect">ACTIVE VISION MODEL (LIST)</label>
           <select id="openrouterModelSelect" class="field-select">
-            <option value="nvidia/llama-3.1-nemotron-70b-instruct">NVIDIA Nemotron 70B (Instruct)</option>
-            <option value="meta-llama/llama-3.2-11b-vision-instruct:free">Llama 3.2 11B Vision (Free Multimodal)</option>
+            <option value="meta-llama/llama-3.2-11b-vision-instruct:free">Llama 3.2 11B Vision (Free Multimodal) ← DEFAULT</option>
             <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free Vision)</option>
             <option value="qwen/qwen-2-vl-72b-instruct:free">Qwen 2 VL 72B (Free Vision)</option>
+            <option value="nvidia/llama-3.1-nemotron-70b-instruct">NVIDIA Nemotron 70B (Text-Only Synthesis)</option>
           </select>
+          <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Vision models are required for image extraction. Nemotron is text-only and is used only for prompt synthesis.</span>
         </div>
 
         <div class="field-group">
@@ -1748,9 +1755,11 @@
           <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Enter any custom OpenRouter model slug here to override the list above.</span>
         </div>
 
+        <div id="openrouterKeyTestStatus" style="font-size:0.74rem; color:var(--text-muted); min-height:1.2em;"></div>
+
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
-          <button type="button" class="btn btn-sm btn-outline" onclick="closeModal('openrouterModal')">Cancel</button>
-          <button type="button" class="btn btn-sm btn-primary" onclick="saveOpenRouterConfig()">Save Model Selection</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="testOpenRouterKey()">Test Connection</button>
+          <button type="button" class="btn btn-sm btn-primary" onclick="saveOpenRouterConfig()">Save Settings</button>
         </div>
       </div>
     </div>
@@ -2171,27 +2180,56 @@
     function getActiveModel() {
       const custom = (localStorage.getItem('atelier_openrouter_custom_model') || '').trim();
       if (custom) return custom;
-      return localStorage.getItem('atelier_openrouter_model') || 'nvidia/llama-3.1-nemotron-70b-instruct';
+      return localStorage.getItem('atelier_openrouter_model') || DEFAULT_VISION_MODEL;
+    }
+
+    // Auto-switch to a vision-capable model whenever an image is attached,
+    // because text-only models (e.g. Nemotron 70B) reject image payloads with a 400.
+    function ensureVisionModelForImage() {
+      const model = getActiveModel();
+      if (isVisionModel(model)) return;
+      localStorage.setItem('atelier_openrouter_model', DEFAULT_VISION_MODEL);
+      initOpenRouterSettings();
+      showToast(`Switched to ${DEFAULT_VISION_MODEL.split('/').pop()} (vision required for image extraction)`, 'warn');
+    }
+
+    const DEFAULT_VISION_MODEL = 'meta-llama/llama-3.2-11b-vision-instruct:free';
+    const DEFAULT_SYNTHESIS_MODEL = 'nvidia/llama-3.1-nemotron-70b-instruct';
+    const VISION_MODELS = [
+      'meta-llama/llama-3.2-11b-vision-instruct:free',
+      'google/gemini-2.0-flash-exp:free',
+      'qwen/qwen-2-vl-72b-instruct:free'
+    ];
+
+    function isVisionModel(model) {
+      return VISION_MODELS.includes(model) || model.includes('vision');
     }
 
     function initOpenRouterSettings() {
-      const model = localStorage.getItem('atelier_openrouter_model') || 'nvidia/llama-3.1-nemotron-70b-instruct';
+      const model = localStorage.getItem('atelier_openrouter_model') || DEFAULT_VISION_MODEL;
       const custom = localStorage.getItem('atelier_openrouter_custom_model') || '';
+      const key = localStorage.getItem('atelier_openrouter_api_key') || '';
       const modelSelect = document.getElementById('openrouterModelSelect');
       const customInput = document.getElementById('openrouterCustomModel');
+      const keyInput = document.getElementById('openrouterApiKeyInput');
       const txt = document.getElementById('openrouterStatusText');
+      const dot = document.getElementById('openrouterStatusDot');
 
       if (modelSelect) modelSelect.value = model;
       if (customInput) customInput.value = custom;
+      if (keyInput) keyInput.value = key;
 
       const active = custom || model;
       const shortName = active.split('/').pop().slice(0, 20);
 
       if (txt) {
-        txt.textContent = shortName;
+        txt.textContent = key ? shortName : 'No API Key';
+      }
+      if (dot) {
+        dot.style.backgroundColor = key ? 'var(--status-valid)' : 'var(--status-warn)';
       }
       const wsPill = document.getElementById('wsModelPillText');
-      if (wsPill) wsPill.textContent = `AI: ${shortName}`;
+      if (wsPill) wsPill.textContent = `AI: ${key ? shortName : 'No Key'}`;
       const activeStudio = document.getElementById('activeModelLabelStudio');
       if (activeStudio) activeStudio.textContent = `Model: ${shortName} (Change)`;
       const activeLab = document.getElementById('activeModelLabelLab');
@@ -2201,16 +2239,58 @@
     function saveOpenRouterConfig() {
       const modelSelect = document.getElementById('openrouterModelSelect');
       const customInput = document.getElementById('openrouterCustomModel');
+      const keyInput = document.getElementById('openrouterApiKeyInput');
 
-      const chosen = modelSelect ? modelSelect.value : 'nvidia/llama-3.1-nemotron-70b-instruct';
+      const chosen = modelSelect ? modelSelect.value : DEFAULT_VISION_MODEL;
       const custom = customInput ? customInput.value.trim() : '';
+      const key = keyInput ? keyInput.value.trim() : '';
 
       localStorage.setItem('atelier_openrouter_model', chosen);
       localStorage.setItem('atelier_openrouter_custom_model', custom);
+      localStorage.setItem('atelier_openrouter_api_key', key);
 
       initOpenRouterSettings();
       closeModal('openrouterModal');
-      showToast(`Model set to: ${custom || chosen.split('/').pop()}`, 'valid');
+      showToast(`Settings saved · ${custom || chosen.split('/').pop()}`, 'valid');
+    }
+
+    async function testOpenRouterKey() {
+      const keyInput = document.getElementById('openrouterApiKeyInput');
+      const statusElem = document.getElementById('openrouterKeyTestStatus');
+      if (keyInput && keyInput.value.trim()) {
+        localStorage.setItem('atelier_openrouter_api_key', keyInput.value.trim());
+      }
+
+      if (statusElem) statusElem.textContent = 'Testing connection...';
+
+      try {
+        const key = localStorage.getItem('atelier_openrouter_api_key') || '';
+        if (!key) throw new Error('No API key stored.');
+
+        const testResp = await fetch('https://openrouter.ai/api/v1/auth/key', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${key}` }
+        });
+
+        if (!testResp.ok) {
+          const err = await testResp.json().catch(() => ({}));
+          throw new Error(err.error?.message || `Authentication failed (${testResp.status})`);
+        }
+        const data = await testResp.json();
+        const limit = data?.limit ? `$${(data.limit / 100).toFixed(2)}` : 'Free tier';
+        if (statusElem) {
+          statusElem.style.color = 'var(--status-valid)';
+          statusElem.textContent = `Connected! · ${data.label || 'Valid key'} · ${limit}`;
+        }
+        initOpenRouterSettings();
+        showToast('OpenRouter key verified!', 'valid');
+      } catch (err) {
+        if (statusElem) {
+          statusElem.style.color = 'var(--status-error)';
+          statusElem.textContent = err.message;
+        }
+        showToast(`Key test failed: ${err.message}`, 'error');
+      }
     }
 
     async function runVisionExtract(type) {
@@ -2226,7 +2306,9 @@
         btn.innerHTML = `Analyzing...`;
       }
 
-      const activeModel = getActiveModel();
+      let activeModel = getActiveModel();
+      if (!isVisionModel(activeModel)) ensureVisionModelForImage();
+      activeModel = getActiveModel();
       showToast(`Analyzing ${type.toUpperCase()} via server with ${activeModel}...`, 'valid');
 
       try {
@@ -2851,6 +2933,7 @@
           if (slot === 'look') appState.lookRef = refObj;
           else appState.outfitRef = refObj;
 
+          ensureVisionModelForImage();
           renderReferenceSlots();
           compilePrompt(true);
           showToast(`Loaded ${file.name} (${w}×${h}px)`, 'valid');
@@ -3579,7 +3662,8 @@
         'LIGHTING AND CAMERA': 170,
         'COMPOSITION': 40,
         'QUALITY': 60,
-        'NEGATIVE PROMPT': 120
+        'NEGATIVE PROMPT': 280,
+        'DIRECTIVES': 200
       };
 
       const compacted = lines.map(line => {
@@ -3608,18 +3692,75 @@
       updatePromptStatsAndMeter(val, { hasSubject: true, hasOutfit: true, hasLighting: true, hasCamera: true });
     }
 
+    /* Update the live char/token counters after an AI job finishes or the
+       compact view is toggled. (Previously undefined -> ReferenceError.) */
+    function updateCharCountDisplays() {
+      const val = document.getElementById('masterPromptOutput')?.value || '';
+      const chars = val.length;
+      const tokens = val.trim() ? Math.ceil(val.trim().split(/\s+/).length * 1.3) : 0;
+      const label = document.getElementById('tokenStatsLabel');
+      if (label) label.textContent = `${tokens} tokens · ${chars} chars`;
+    }
+
+    /* Compact view: apply the Nano Banana character budget without
+       destroying the fabric-physics block or the negative list. */
+    function compactPromptBudget() {
+      const outBox = document.getElementById('masterPromptOutput');
+      if (!outBox) return;
+      const val = outBox.value;
+      if (!val) return;
+
+      const lines = val.split('\n');
+      const budgets = {
+        'SUBJECT PHYSIQUE': 200,
+        'HAIRSTYLE': 190,
+        'MAKEUP': 100,
+        'OUTFIT': 240,
+        'JEWELLERY AND ACCESSORIES': 90,
+        'POSE AND ACTION': 180,
+        'AND GAZE': 80,
+        'BACKGROUND AND ENVIRONMENT': 100,
+        'LIGHTING AND CAMERA': 170,
+        'COMPOSITION': 40,
+        'QUALITY': 60,
+        'NEGATIVE PROMPT': 280,
+        'DIRECTIVES': 200
+      };
+
+      const compacted = lines.map(line => {
+        const colonIdx = line.indexOf(':');
+        if (colonIdx === -1) return line;
+        const label = line.substring(0, colonIdx).trim();
+        const content = line.substring(colonIdx + 1).trim();
+        const maxLen = budgets[label];
+        if (maxLen && content.length > maxLen) {
+          let cut = content.substring(0, maxLen);
+          const lastSpace = cut.lastIndexOf(' ');
+          if (lastSpace > maxLen - 20) cut = cut.substring(0, lastSpace);
+          return `${label}: ${cut.replace(/[,;]\s*$/, '')}...`;
+        }
+        return line;
+      }).join('\n');
+
+      outBox.value = compacted;
+      updateCharCountDisplays();
+      showToast('Applied compact character budget', 'valid');
+    }
+
     function updatePromptStatsAndMeter(text, pillars) {
       const chars = text.length;
       const tokens = text.trim() ? Math.ceil(text.trim().split(/\s+/).length * 1.3) : 0;
-      document.getElementById('tokenStatsLabel').textContent = `${tokens} tokens · ${chars} chars`;
+      const label = document.getElementById('tokenStatsLabel');
+      if (label) label.textContent = `${tokens} tokens · ${chars} chars`;
 
-      document.getElementById('meterSubject').classList.toggle('ready', pillars.hasSubject);
-      document.getElementById('meterOutfit').classList.toggle('ready', pillars.hasOutfit);
-      document.getElementById('meterLighting').classList.toggle('ready', pillars.hasLighting);
-      document.getElementById('meterCamera').classList.toggle('ready', pillars.hasCamera);
+      const s = document.getElementById('meterSubject'); if (s) s.classList.toggle('ready', pillars.hasSubject);
+      const o = document.getElementById('meterOutfit'); if (o) o.classList.toggle('ready', pillars.hasOutfit);
+      const l = document.getElementById('meterLighting'); if (l) l.classList.toggle('ready', pillars.hasLighting);
+      const c = document.getElementById('meterCamera'); if (c) c.classList.toggle('ready', pillars.hasCamera);
 
       const score = [pillars.hasSubject, pillars.hasOutfit, pillars.hasLighting, pillars.hasCamera].filter(Boolean).length;
-      document.getElementById('completenessScoreLabel').textContent = `Completeness: ${score}/4`;
+      const cl = document.getElementById('completenessScoreLabel');
+      if (cl) cl.textContent = `Completeness: ${score}/4`;
     }
 
     function updateUndoRedoButtons() {

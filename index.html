@@ -868,9 +868,9 @@
         </button>
 
         <div class="header-actions">
-          <button type="button" class="btn btn-sm btn-outline" id="openrouterStatusPill" onclick="openModal('openrouterModal')" title="OpenRouter NVIDIA VL Model Settings" style="font-family:var(--font-mono); font-size:0.72rem; display:inline-flex; align-items:center; gap:6px; padding:4px 10px;">
+          <button type="button" class="btn btn-sm btn-outline" id="openrouterStatusPill" title="OpenRouter Model Settings" style="font-family:var(--font-mono); font-size:0.72rem; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; cursor:default;">
             <span style="width:6px; height:6px; border-radius:50%; background-color:var(--status-valid); display:inline-block;" id="openrouterStatusDot"></span>
-            <span id="openrouterStatusText">NVIDIA NeMo VL</span>
+            <span id="openrouterStatusText">Loading...</span>
           </button>
           <button type="button" class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
             <svg width="16" height="16"><use href="#ico-fullscreen" /></svg>
@@ -1185,9 +1185,9 @@
         </div>
 
         <div class="header-actions">
-          <button type="button" class="btn btn-sm btn-outline" id="wsModelPill" onclick="openModal('openrouterModal')" title="OpenRouter AI Model Selection" style="font-family:var(--font-mono); font-size:0.72rem; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; cursor:pointer;">
+          <button type="button" class="btn btn-sm btn-outline" id="wsModelPill" title="Open Settings for Model Config" style="font-family:var(--font-mono); font-size:0.72rem; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; cursor:default;">
             <span style="width:6px; height:6px; border-radius:50%; background-color:var(--status-valid); display:inline-block;"></span>
-            <span id="wsModelPillText">AI Model: Nemotron 70B</span>
+            <span id="wsModelPillText">AI: Loading...</span>
           </button>
           <button type="button" class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
             <svg width="16" height="16"><use href="#ico-fullscreen" /></svg>
@@ -1431,7 +1431,7 @@
                   <span class="pill-badge pill-accent" style="font-weight:700;">AI Prompt Engine</span>
                   <span style="font-size:0.75rem; color:var(--text-secondary);" id="studioCoverageScore">Vision &amp; Synthesis Pipeline</span>
                 </div>
-                <span class="mono-label" id="activeModelLabelStudio" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter LLM (Change)</span>
+                <span class="mono-label" id="activeModelLabelStudio" style="font-size:0.7rem; color:var(--accent);">Model: OpenRouter</span>
               </div>
 
               <button type="button" class="btn btn-primary" id="btnGenerateStudioAI" onclick="triggerStudioAIGeneration()" style="width:100%; padding:13px 20px; font-size:0.95rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 16px rgba(224, 79, 51, 0.28);">
@@ -1495,7 +1495,7 @@
                   <span class="pill-badge pill-accent">Text-Only AI Composer</span>
                   <span style="font-size:0.75rem; color:var(--text-secondary);">Composes all selected modules with protected instructions</span>
                 </div>
-                <span class="mono-label" id="activeModelLabelLab" onclick="openModal('openrouterModal')" style="font-size:0.7rem; color:var(--accent); cursor:pointer; text-decoration:underline;" title="Click to change model">Model: OpenRouter (Change)</span>
+                <span class="mono-label" id="activeModelLabelLab" style="font-size:0.7rem; color:var(--accent);">Model: OpenRouter</span>
               </div>
 
               <button type="button" class="btn btn-primary" id="btnGenerateLabAI" onclick="triggerLabAIGeneration()" style="width:100%; padding:13px 20px; font-size:0.95rem; font-weight:700; display:flex; align-items:center; justify-content:center; gap:10px;">
@@ -1574,6 +1574,45 @@
                   <button type="button" class="btn btn-xs btn-outline" onclick="openModal('termsModal')">Terms &amp; Conditions</button>
                   <button type="button" class="btn btn-xs btn-outline" onclick="openModal('changelogModal')">Release Notes</button>
                 </div>
+              </div>
+            </div>
+
+            <!-- OpenRouter Model Settings (moved from header) -->
+            <div class="card" style="margin-top:16px; padding:16px;">
+              <div class="mono-label" style="margin-bottom:12px;">OpenRouter Model Configuration</div>
+              <div style="display:flex; flex-direction:column; gap:14px;">
+                <div class="card-inset" style="padding:10px 12px; display:flex; align-items:center; gap:10px; border-color:var(--accent-border);">
+                  <span style="width:8px; height:8px; border-radius:50%; background-color:var(--status-valid); flex-shrink:0;"></span>
+                  <div style="font-size:0.77rem; color:var(--text-secondary); line-height:1.4;">
+                    <strong style="color:var(--text-primary); display:block; margin-bottom:1px;">Local-First &middot; Zero Cloud Uploads</strong>
+                    Your key stays in this browser's localStorage and is sent only to OpenRouter's official API.
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="openrouterApiKeyInput">OPENROUTER API KEY</label>
+                  <input type="password" id="openrouterApiKeyInput" class="field-input" placeholder="sk-or-v1-..." autocomplete="off" />
+                  <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Get a free key at openrouter.ai/keys. Required for all AI extraction & generation.</span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="openrouterModelSelect">ACTIVE MODEL</label>
+                  <select id="openrouterModelSelect" class="field-select"></select>
+                  <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Vision models required for image extraction. Text-only models (e.g., Nemotron) auto-used for prompt synthesis.</span>
+                </div>
+
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                  <button type="button" class="btn btn-sm btn-outline" onclick="fetchOpenRouterModels()">Fetch Models from OpenRouter</button>
+                  <button type="button" class="btn btn-sm btn-primary" onclick="saveOpenRouterConfig()">Save Settings</button>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="openrouterCustomModel">CUSTOM MODEL SLUG (OPTIONAL)</label>
+                  <input type="text" id="openrouterCustomModel" class="field-input" placeholder="e.g. nvidia/nemotron-4-340b-instruct or any model name" />
+                  <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Enter any custom OpenRouter model slug here to override the list above.</span>
+                </div>
+
+                <div id="openrouterKeyTestStatus" style="font-size:0.74rem; color:var(--text-muted); min-height:1.2em;"></div>
               </div>
             </div>
           </section>
@@ -1710,59 +1749,7 @@
        MODALS: USER PROFILE, VERSION DIFF, CONFIRM RESET, PRIVACY, TERMS, CHANGELOG
        ========================================================================== -->
 
-  <!-- User Workspace Profile Modal -->
   
-  <!-- OpenRouter & NVIDIA Model Settings Modal -->
-  <div id="openrouterModal" class="modal-backdrop" onclick="if(event.target===this) closeModal('openrouterModal')">
-    <div class="modal-card" style="max-width:500px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <svg width="20" height="20" style="color:var(--accent);"><use href="#ico-nav-settings" /></svg>
-          <h3 style="font-size:1.08rem; font-weight:700;">Vision &amp; Synthesis Model Selection</h3>
-        </div>
-        <button type="button" class="icon-btn" onclick="closeModal('openrouterModal')"><svg width="15" height="15"><use href="#ico-close" /></svg></button>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:14px;">
-        <div class="card-inset" style="padding:10px 12px; display:flex; align-items:center; gap:10px; border-color:var(--accent-border);">
-          <span style="width:8px; height:8px; border-radius:50%; background-color:var(--status-valid); flex-shrink:0;"></span>
-          <div style="font-size:0.77rem; color:var(--text-secondary); line-height:1.4;">
-            <strong style="color:var(--text-primary); display:block; margin-bottom:1px;">Local-First · Zero Cloud Uploads</strong>
-            Your key stays in this browser's localStorage and is sent only to OpenRouter's official API.
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="openrouterApiKeyInput">OPENROUTER API KEY</label>
-          <input type="password" id="openrouterApiKeyInput" class="field-input" placeholder="sk-or-v1-..." autocomplete="off" />
-          <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Get a free key at openrouter.ai/keys. Required for all AI extraction &amp; generation.</span>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="openrouterModelSelect">ACTIVE VISION MODEL (LIST)</label>
-          <select id="openrouterModelSelect" class="field-select">
-            <option value="meta-llama/llama-3.2-11b-vision-instruct:free">Llama 3.2 11B Vision (Free Multimodal) ← DEFAULT</option>
-            <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free Vision)</option>
-            <option value="qwen/qwen-2-vl-72b-instruct:free">Qwen 2 VL 72B (Free Vision)</option>
-            <option value="nvidia/llama-3.1-nemotron-70b-instruct">NVIDIA Nemotron 70B (Text-Only Synthesis)</option>
-          </select>
-          <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Vision models are required for image extraction. Nemotron is text-only and is used only for prompt synthesis.</span>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label" for="openrouterCustomModel">CUSTOM MODEL SLUG (OPTIONAL)</label>
-          <input type="text" id="openrouterCustomModel" class="field-input" placeholder="e.g. nvidia/nemotron-4-340b-instruct or any model name" />
-          <span style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:block;">Enter any custom OpenRouter model slug here to override the list above.</span>
-        </div>
-
-        <div id="openrouterKeyTestStatus" style="font-size:0.74rem; color:var(--text-muted); min-height:1.2em;"></div>
-
-        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
-          <button type="button" class="btn btn-sm btn-outline" onclick="testOpenRouterKey()">Test Connection</button>
-          <button type="button" class="btn btn-sm btn-primary" onclick="saveOpenRouterConfig()">Save Settings</button>
-        </div>
-      </div>
-    </div>
   </div>
   </div>
 
@@ -2206,6 +2193,21 @@
     }
 
     function initOpenRouterSettings() {
+      // Try cached models first, then populate dropdown
+      if (!loadCachedModels()) {
+        // Fallback: ensure dropdown has at least the default
+        const select = document.getElementById('openrouterModelSelect');
+        if (select && select.options.length === 0) {
+          select.innerHTML = `
+            <option value="meta-llama/llama-3.2-11b-vision-instruct:free">Llama 3.2 11B Vision (Free)</option>
+            <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free Vision)</option>
+            <option value="qwen/qwen-2-vl-72b-instruct:free">Qwen 2 VL 72B (Free Vision)</option>
+            <option value="microsoft/phi-3.5-vision-instruct:free">Phi-3.5 Vision (Free)</option>
+            <option value="nvidia/llama-3.1-nemotron-70b-instruct">Nemotron 70B (Text-Only)</option>
+          `;
+        }
+      }
+
       const model = localStorage.getItem('atelier_openrouter_model') || DEFAULT_VISION_MODEL;
       const custom = localStorage.getItem('atelier_openrouter_custom_model') || '';
       const key = localStorage.getItem('atelier_openrouter_api_key') || '';
@@ -2231,9 +2233,9 @@
       const wsPill = document.getElementById('wsModelPillText');
       if (wsPill) wsPill.textContent = `AI: ${key ? shortName : 'No Key'}`;
       const activeStudio = document.getElementById('activeModelLabelStudio');
-      if (activeStudio) activeStudio.textContent = `Model: ${shortName} (Change)`;
+      if (activeStudio) activeStudio.textContent = `Model: ${shortName}`;
       const activeLab = document.getElementById('activeModelLabelLab');
-      if (activeLab) activeLab.textContent = `Model: ${shortName} (Change)`;
+      if (activeLab) activeLab.textContent = `Model: ${shortName}`;
     }
 
     function saveOpenRouterConfig() {
@@ -2250,7 +2252,6 @@
       localStorage.setItem('atelier_openrouter_api_key', key);
 
       initOpenRouterSettings();
-      closeModal('openrouterModal');
       showToast(`Settings saved · ${custom || chosen.split('/').pop()}`, 'valid');
     }
 
@@ -2290,6 +2291,113 @@
           statusElem.textContent = err.message;
         }
         showToast(`Key test failed: ${err.message}`, 'error');
+      }
+    }
+
+    // Fetch and cache OpenRouter models, filter for free + vision
+    async function fetchOpenRouterModels() {
+      const select = document.getElementById('openrouterModelSelect');
+      const statusElem = document.getElementById('openrouterKeyTestStatus');
+      if (!select) return;
+
+      select.disabled = true;
+      select.innerHTML = '<option value="">Loading models...</option>';
+      if (statusElem) statusElem.textContent = 'Fetching from OpenRouter...';
+
+      try {
+        const resp = await fetch('https://openrouter.ai/api/v1/models');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+        const data = await resp.json();
+        const models = data.data || [];
+
+        // Filter: free (prompt price = 0) + supports vision (image modality)
+        const freeVisionModels = models
+          .filter(m => {
+            const pricing = m.pricing || {};
+            const isFree = (pricing.prompt === 0 || pricing.prompt === '0');
+            const modalities = m.architecture?.modality || [];
+            const hasVision = modalities.includes('image') || m.id.includes('vision');
+            return isFree && hasVision;
+          })
+          .map(m => ({ id: m.id, name: m.name || m.id }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        // Also include text-only free models for synthesis
+        const freeTextModels = models
+          .filter(m => {
+            const pricing = m.pricing || {};
+            return pricing.prompt === 0 || pricing.prompt === '0';
+          })
+          .filter(m => !freeVisionModels.find(vm => vm.id === m.id))
+          .map(m => ({ id: m.id, name: (m.name || m.id) + ' (text-only)' }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        const allModels = [...freeVisionModels, ...freeTextModels];
+
+        // Cache with 24h TTL
+        localStorage.setItem('atelier_openrouter_models_cache', JSON.stringify({
+          models: allModels,
+          fetchedAt: Date.now()
+        }));
+
+        // Populate dropdown
+        select.innerHTML = allModels.map(m =>
+          `<option value="${m.id}">${m.name}</option>`
+        ).join('');
+
+        // Restore saved selection
+        const saved = localStorage.getItem('atelier_openrouter_model') || DEFAULT_VISION_MODEL;
+        select.value = saved;
+
+        if (statusElem) {
+          statusElem.style.color = 'var(--status-valid)';
+          statusElem.textContent = `Loaded ${freeVisionModels.length} free vision + ${freeTextModels.length} free text models`;
+        }
+        showToast(`Fetched ${allModels.length} free models from OpenRouter`, 'valid');
+      } catch (err) {
+        console.error('Model fetch failed:', err);
+        // Fallback to hardcoded list
+        const fallback = [
+          { id: 'meta-llama/llama-3.2-11b-vision-instruct:free', name: 'Llama 3.2 11B Vision (Free)' },
+          { id: 'google/gemini-2.0-flash-exp:free', name: 'Gemini 2.0 Flash (Free Vision)' },
+          { id: 'qwen/qwen-2-vl-72b-instruct:free', name: 'Qwen 2 VL 72B (Free Vision)' },
+          { id: 'microsoft/phi-3.5-vision-instruct:free', name: 'Phi-3.5 Vision (Free)' },
+          { id: 'nvidia/llama-3.1-nemotron-70b-instruct', name: 'Nemotron 70B (Text-Only)' }
+        ];
+        select.innerHTML = fallback.map(m =>
+          `<option value="${m.id}">${m.name}</option>`
+        ).join('');
+        select.value = DEFAULT_VISION_MODEL;
+
+        if (statusElem) {
+          statusElem.style.color = 'var(--status-warn)';
+          statusElem.textContent = `Fetch failed — using fallback list (${err.message})`;
+        }
+        showToast(`Model fetch failed: ${err.message}`, 'warn');
+      } finally {
+        select.disabled = false;
+      }
+    }
+
+    // On init, try to load cached models
+    function loadCachedModels() {
+      const cached = localStorage.getItem('atelier_openrouter_models_cache');
+      if (!cached) return false;
+      try {
+        const { models, fetchedAt } = JSON.parse(cached);
+        if (Date.now() - fetchedAt > 24 * 60 * 60 * 1000) return false; // 24h TTL
+        const select = document.getElementById('openrouterModelSelect');
+        if (select) {
+          select.innerHTML = models.map(m =>
+            `<option value="${m.id}">${m.name}</option>`
+          ).join('');
+          const saved = localStorage.getItem('atelier_openrouter_model') || DEFAULT_VISION_MODEL;
+          select.value = saved;
+        }
+        return true;
+      } catch (e) {
+        return false;
       }
     }
 

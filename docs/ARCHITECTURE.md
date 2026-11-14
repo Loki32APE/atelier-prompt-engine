@@ -6,34 +6,33 @@
 
 ## 1. Directory & Module Structure
 
-The project follows a clean, decoupled modular frontend architecture with zero build steps or heavyweight dependencies:
+**Current state (v1.0):** The app is a **self-contained single-file SPA** (`index.html` with inline CSS + JS) backed by a **Flask server** (`app.py`). The `css/` and `js/` directories are stale references — they are not loaded by the running app.
 
 ```text
 atelier-prompt-engine/
-├── index.html                   # Semantic markup, SVG sprite definitions & app shell
+├── index.html                   # Complete app: HTML, CSS, JS, SVG sprite (self-contained)
 │
-├── css/
-│   ├── base.css                 # Obsidian darkroom theme, tokens, responsive layout & rail
-│   ├── studio.css               # Vision Studio dropzones & Nano Banana 2.1 Raw Architecture
-│   ├── lab.css                  # 8-Module Visual Lab accordions, slot grids & override styles
-│   └── compiler.css             # Live Prompt Compiler drawer, syntax switcher & live counters
+├── app.py                       # Flask backend (canonical — AI routes + static serving)
+├── requirements.txt             # Python deps: flask>=3.0.0, gunicorn>=21.0.0
+├── server.py                    # Legacy stdlib HTTP server (no AI routes)
+├── server.js                    # Legacy Node server (static + /api/vision only)
+├── package.json                 # Node config (not used in production)
 │
-├── js/
-│   ├── schema.js                # Authentic 8-module editorial taxonomy (LAB_SCHEMA)
-│   ├── raw_prompts.js           # Nano Banana 2.1 system prompts, fabric physics & constraints
-│   ├── openrouter.js            # OpenRouter API client (NVIDIA NeMo / Nemotron VL & free models)
-│   ├── compiler.js              # Multi-target prompt compiler & character budget optimizer
-│   └── app.js                   # Application controller, state management, dropzones & events
+├── css/                         # Stale — not loaded
+├── js/                          # Stale — not loaded
 │
 ├── docs/
 │   ├── ARCHITECTURE.md          # System architecture & prompt pipeline design (this file)
-│   ├── OPENROUTER_SETUP.md      # OpenRouter API key & free NVIDIA model guide
-│   ├── RENDER_DEPLOYMENT.md     # Step-by-step beginner guide to Render deployment
+│   ├── OPENROUTER_SETUP.md      # OpenRouter API key & model guide
+│   ├── RENDER_DEPLOYMENT.md     # Render deployment guide (Flask)
 │   └── PROMPT_SYNTAX_GUIDE.md   # Nano Banana 2.1 & Visual Lab prompting reference
 │
-├── README.md                    # Repository introduction & quick start guide
-└── .gitignore                   # Git hygiene configuration
+├── README.md                    # Project overview & quick start
+├── restored_index.html          # Stale backup — do not use
+└── .gitignore                   # Git hygiene
 ```
+
+> **Planned (Phase 2):** Real modular split — `js/*.js` loaded via `<script type="module">`, `css/*.css` via `<link>`, backend/frontend separation, DB + auth, mobile PWA wrapper.
 
 ---
 
